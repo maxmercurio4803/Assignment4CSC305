@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment #4</title>
+  <style>
+    body{ background-color: beige;}
+    #enterDetails {text-align:center; float:left; width: 50%; background-color: beige; color:black; outline: 1px solid black;}
+    #initial {text-align:center; float:left ;width: 100%; background-color: beige;}
+    #users { float:left ;width: 100%; background-color: beige;}
+    #findDetails {float:left; width: 50%; background-color: beige; color:black;outline: 1px solid black;}
+    #user1{ display: block; outline: 1px solid black}
+    #user2{ display: block; outline: 1px solid black}
+    input {width: 120px;}
+    #test{text-align: center;}
+  </style>
+
+</head>
+<body>
+  <header>
+    <img src="Untitled design.png" width=100% height=200px>
+  </header>
+  <div id="initial">
+    <div id="enterDetails">
+      <h1>Enter Details</h1>
+      <h4>ID</h4>
+      <input id="enterID" type="text">
+
+      <h4>Name</h4>
+      <input id="enterName" type="text">
+
+      <h4>Age</h4>
+      <input id="enterAge" type="number"> 
+
+      <h4>Location</h4>
+      <input id="enterLocation" type="text">
+
+      <h4>Bio</h4>
+      <input id="enterBio" type="text">
+
+      <h4>Image (web address)</h4>
+      <input id="enterImage" type="text"> <br><br>
+
+      <button id="insert">INSERT</button>
+      <button id="update">UPDATE</button>
+      <button id="remove">REMOVE</button> <br><br> <br><br>
+
+    </div>
+    <div id="findDetails">
+      <h1>Find by ID</h1>
+      <h4>ID</h4>
+      <input id="findID" type="text"> <br><br>
+      <button id="find">FIND</button>
+
+      <h3 id="findName" type="text"></h3>
+      <h3 id="findAge" type="text"></h3>
+      <h3 id="findLocation" type="text"></h3>
+      <h3 id="findBio" type="text"></h3>
+      <h3 id="findImage" type="text"></h3> <br><br>
+    </div>
+  </div>
+
+  <div id="users">
+    <div id="user1">
+      <h1>User1</h1>
+      <h3 id="user1ID" type="text"></h3>
+      <h3 id="user1Name" type="text"></h3>
+      <h3 id="user1Age" type="text"></h3>
+      <h3 id="user1Location" type="text"></h3>
+      <h3 id="user1Bio" type="text"></h3>
+      <h3 id="user1Image" type="text"></h3>
+    </div>
+    <div id="user2">
+      <h1>User2</h1>
+      <h3 id="user2ID" type="text"></h3>
+      <h3 id="user2Name" type="text"></h3>
+      <h3 id="user2Age" type="text"></h3>
+      <h3 id="user2Location" type="text"></h3>
+      <h3 id="user2Bio" type="text"></h3>
+      <h3 id="user2Image" type="text"></h3>
+    </div>
+  </div>
+
+  <div id="test">
+    <iframe src="https://thunkable.site/w/0NGyvIqNKb8y3o0SuR28Y" title="Chop Down the Tree Thunkable App" height = 1000 width = 500></iframe>
+  </div>
+
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDloZTrSvj757xjuXL8RrabftGt7D9nuPs",
+      authDomain: "profileapp-d9bbb.firebaseapp.com",
+      databaseURL: "https://profileapp-d9bbb-default-rtdb.firebaseio.com",
+      projectId: "profileapp-d9bbb",
+      storageBucket: "profileapp-d9bbb.appspot.com",
+      messagingSenderId: "651146040641",
+      appId: "1:651146040641:web:2925125b2e19c296bafdc0",
+      measurementId: "G-05MFLP9CFL"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    import {getDatabase, set, get, update, remove, ref, child, onValue}
+    from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js"
+
+    const db = getDatabase();
+
+    var enterID = document.querySelector("#enterID");
+    var enterName = document.querySelector("#enterName");
+    var enterAge = document.querySelector("#enterAge");
+    var enterLocation = document.querySelector("#enterLocation");
+    var enterBio= document.querySelector("#enterBio");
+    var findID = document.querySelector("#findID");
+    var findName = document.querySelector("#findName");
+    var findAge = document.querySelector("#findAge");
+    var findLocation = document.querySelector("#findLocation");
+    var findImage = document.querySelector("#findImage");
+    var findBio = document.querySelector("#findBio");
+
+    var insertBtn = document.querySelector("#insert")
+    var updateBtn = document.querySelector("#update")
+    var removeBtn = document.querySelector("#remove")
+    var findBtn = document.querySelector("#find")
+
+
+    function InsertData() {
+      set(ref(db, enterID.value), {
+        name: enterName.value,
+        ID: enterID.value,
+        age: enterAge.value,
+        location: enterLocation.value,
+        bio: enterBio.value,
+        image: enterImage.value
+      })
+      .then(()=>{
+        alert("Data added successfully!")
+      })
+      .catch((error)=>{
+        alert(error)
+      });
+    }
+
+    function FindData() {
+      const dbref = ref(db);
+
+      get(child(dbref, findID.value))
+      .then((snapshot)=>{
+        if (snapshot.exists()) {
+          findName.innerHTML = "Name: " + snapshot.val().name;
+          findAge.innerHTML = "Age: " + snapshot.val().age;
+          findLocation.innerHTML = "Location: " + snapshot.val().location;
+          findBio.innerHTML = "Bio: " + snapshot.val().bio;
+          findImage.innerHTML = "Image: " + '<img src="' + snapshot.val().image + '" width=\"100px\" height=\"100px\">';
+        } else{
+          alert("No data found");
+        }
+      })
+      .catch((error)=>{
+        alert(error)
+      })
+    }
+
+    function UpdateData() {
+      update(ref(db, enterID.value), {
+        name: enterName.value,
+        age: enterAge.value,
+        location: enterLocation.value,
+        bio: enterBio.value,
+        image: enterImage.value
+      })
+      .then(()=>{
+        alert("Data updated successfully!");
+      })
+      .catch((error)=>{
+        alert(error);
+      });
+    }
+
+    function RemoveData() {
+      remove(ref(db, enterID.value))
+      .then(()=>{
+        alert("Data removed successfully!");
+      })
+      .catch((error)=>{
+        alert(error);
+      });
+    }
+
+    function inputData() {
+      const dbref = ref(db);
+
+      get(child(dbref, "eC7CnHVe8RZllBKYt4JnpK6eiDz2"))
+      .then((snapshot)=>{
+        if (snapshot.exists()) {
+          user1ID.innerHTML = "ID: eC7CnHVe8RZllBKYt4JnpK6eiDz2";
+          user1Name.innerHTML = "Name: " + snapshot.val().name;
+          user1Age.innerHTML = "Age: " + snapshot.val().age;
+          user1Location.innerHTML = "Location: " + snapshot.val().location;
+          user1Bio.innerHTML = "Bio: " + snapshot.val().bio;
+          user1Image.innerHTML = "Image: " + '<img src="' + snapshot.val().image + '" width=\"100px\" height=\"100px\">';
+        } else{
+          alert("No data found");
+        }
+      })
+      .catch((error)=>{
+        alert(error)
+      })
+
+      get(child(dbref, "wvAWMpGc7ob1N4hKuI0WV9AIbe52"))
+      .then((snapshot)=>{
+        if (snapshot.exists()) {
+          user2ID.innerHTML = "ID: wvAWMpGc7ob1N4hKuI0WV9AIbe52";
+          user2Name.innerHTML = "Name: " + snapshot.val().name;
+          user2Age.innerHTML = "Age: " + snapshot.val().age;
+          user2Location.innerHTML = "Location: " + snapshot.val().location;
+          user2Bio.innerHTML = "Bio: " + snapshot.val().bio;
+          user2Image.innerHTML = "Image: " + '<img src="' + snapshot.val().image + '" width=\"100px\" height=\"100px\">';
+        } else{
+          alert("No data found");
+        }
+      })
+      .catch((error)=>{
+        alert(error)
+      })
+    }
+
+    window.onload = inputData;
+
+    insertBtn.addEventListener('click', InsertData);
+    findBtn.addEventListener('click', FindData);
+    removeBtn.addEventListener('click', RemoveData);
+    updateBtn.addEventListener('click', UpdateData);
+
+  </script>
+  
+</body>
+</html>
