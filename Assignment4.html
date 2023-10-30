@@ -243,6 +243,26 @@
     updateBtn.addEventListener('click', UpdateData);
 
   </script>
+
+ <script async src="https://www.googletagmanager.com/gtag/js?id=<Some Property ID A>"></script>
+
+ <script>
+
+   window.dataLayer = window.dataLayer || [];
+  
+   function gtag(){dataLayer.push(arguments);}
+     
+   gtag('js', new Date());
+  
+   gtag('config', '<Some Property ID A>');
+  
+   gtag('config', '<Some Property ID B>');
+  
+   gtag('event', 'sign_up', { 'method': 'email' });
+  
+   gtag('event', 'view_video', { 'send_to': '<Some Property ID B>' });
+
+  </script>
   
 </body>
 </html>
